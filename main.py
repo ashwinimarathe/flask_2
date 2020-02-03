@@ -34,7 +34,7 @@ books = {}
 @app.route('/newroute/<name>')
 def newroute(name):
     """parameter"""
-    return "this was passed in : %s" % name
+    return "this was passed in: %s" % name
 
 
 @app.errorhandler(500)
