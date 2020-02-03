@@ -47,7 +47,7 @@ def index():
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
-    print("In Create ")
+    print("In Create")
     new_book = {}
     #user_id = session.get('user_id')
     user_id = "ashwini"
