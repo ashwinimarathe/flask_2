@@ -10,7 +10,17 @@ users = {
                 'books': [],
                 'rentedbooks': []
 
-            }
+            },
+    'dhruv':{
+                'books': [{
+                    'title': 'Harry Potter 2',
+                    'author': 'J.K.Rowling',
+                    'publisher': 'piblisher 1',
+                    'publishyear': '1998',
+                    'id': 'Harry Potter 2'}
+                ]
+    }
+
 }
 
 books = {}
@@ -47,9 +57,7 @@ def index():
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
-    print("In Create")
     new_book = {}
-    #user_id = session.get('user_id')
     user_id = "ashwini"
     if request.method == 'POST':
         new_book['title'] = request.form['title']
@@ -67,19 +75,11 @@ def create():
         if error is not None:
             flash(error)
         else:
-            #user_id = str(session.get('user_id'))
             user_id = "ashwini"
             users[user_id]['books'].append(new_book)
-            # user_book = {
-            #     'ownerid': user_id,
-            #     'bookid': new_book.id,
-            #     'possessedid': user_id
-            # }
-            # users_books.append(user_book)
+            
+        return redirect(url_for('index'))
 
-            return redirect(url_for('index'))
-
-    #return redirect('index.html')
     return render_template('create.html')
 
 
@@ -88,14 +88,17 @@ def findbook():
     if request.method == 'POST':
         title = request.form['title']
         author = request.form['author']
-        #user_id = session.get('user_id')
+        if title is not None:
+            print("Test")
+        print(f"title {title}")
         user_id = "ashwini"
         if title is not None:
-            return redirect(url_for('dashboard.rent', title=title))
+            return redirect(url_for('rent', title=title))
         elif author is not None:
-            return redirect(url_for('dashboard.rent', title=author)) 
+            return redirect(url_for('rent', title=author)) 
 
-        return redirect('rent.html', title=title)
+        return redirect(url_for('rent', title=title))
+    # GET request
     return render_template('find.html')
 
 
@@ -108,10 +111,11 @@ def rent(title):
         for user in users:
             book_list = users[user_id]['books']
             for book in book_list:
+                print(f"user {user} book {book}")
                 if book['title'] == title:
                     rentablebooks.append(book)
          
-        return render_template('dashboard/rent.html', books=rentablebooks)
+        return render_template('rent.html', books=rentablebooks)
     elif request.method == 'POST':
         bookid = request.form['submit_button']
         print("debug: bookid: "+bookid)
@@ -126,7 +130,7 @@ def rent(title):
                     break
 
         users[user_id]['books'].append(rented_book)
-        return redirect('dashboard/index.html')
+        return redirect(url_for('index.html'))
 
 
 if __name__ == '__main__':
